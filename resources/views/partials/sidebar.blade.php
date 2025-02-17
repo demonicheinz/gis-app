@@ -88,12 +88,7 @@
                 </li>
 
                 <li class="sidebar-item {{ Request::is("kecamatan*") ? "active" : "" }}">
-                    <a
-                        href="
-                    {{-- {{ route('kecamatan.index') }} --}}
-                    "
-                        class="sidebar-link"
-                    >
+                    <a href="{{ route("kecamatan.index") }}" class="sidebar-link">
                         <i class="bi bi-building"></i>
                         <span>Kecamatan</span>
                     </a>

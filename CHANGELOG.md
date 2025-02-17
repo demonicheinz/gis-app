@@ -20,6 +20,12 @@ Semua perubahan besar akan tercatat di bawah ini. Untuk informasi lebih lanjut, 
 
 ### Added
 
+- Menambahkan halaman Sekolah, termasuk Fitur CRUD.
+
+## [0.3.0] - 2025-02-18
+
+### Added
+
 - Menambahkan halaman Kecamatan, termasuk Fitur CRUD.
 
 ## [0.2.0] - 2025-02-17

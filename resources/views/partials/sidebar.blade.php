@@ -95,12 +95,7 @@
                 </li>
 
                 <li class="sidebar-item {{ Request::is("sekolah*") ? "active" : "" }}">
-                    <a
-                        href="
-                    {{-- {{ route('sekolah.index') }} --}}
-                    "
-                        class="sidebar-link"
-                    >
+                    <a href="{{ route("sekolah.index") }}" class="sidebar-link">
                         <i class="bi bi-mortarboard"></i>
                         <span>Sekolah</span>
                     </a>

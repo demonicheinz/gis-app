@@ -1,6 +1,6 @@
 <div align="center">
   <br>
-      <img src="https://www.upinside.com.br/tim.php?src=uploads/courses/2020/11/laravel-developer-1604669669.png&w=960&h=540" alt="Project Banner">
+      <img src="assets/project-banner.png" alt="Project Banner">
   <br>
 
   <div>
@@ -12,6 +12,16 @@
   </div>
 
 <h3 align="center">Sistem Informasi Geografis</h3>
+</div>
+
+<br>
+
+<div align="center">
+
+[![Preview Page](https://img.shields.io/badge/Preview%20Page-Live%20Preview-blue)](https://sig.heinz.id/)
+![GitHub branch check runs](https://img.shields.io/github/check-runs/demonicheinz/gis-app/main)
+![GitHub License](https://img.shields.io/github/license/demonicheinz/gis-app)
+
 </div>
 
 <br>

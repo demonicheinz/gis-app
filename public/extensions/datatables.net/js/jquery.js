@@ -3100,7 +3100,9 @@
     }
     n.extend({
         htmlPrefilter: function (a) {
-            return a.replace(va, "<$1></$2>");
+            a.replace(/<(\w+)([^>]*?)\/>/g, function (match, p1, p2) {
+                return "<" + p1 + ">" + p2 + "</" + p1 + ">";
+            });
         },
         clone: function (a, b, c) {
             var d,

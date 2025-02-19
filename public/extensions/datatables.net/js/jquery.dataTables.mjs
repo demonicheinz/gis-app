@@ -1818,6 +1818,11 @@ function _fnCamelToHungarian(src, user, force) {
     var hungarianKey;
 
     $.each(user, function (key, val) {
+        // Skip dangerous property names to prevent prototype pollution
+        if (key === "__proto__" || key === "constructor" || key === "prototype") {
+            return;
+        }
+
         hungarianKey = src._hungarianMap[key];
 
         if (hungarianKey !== undefined && (force || user[hungarianKey] === undefined)) {
@@ -1827,11 +1832,11 @@ function _fnCamelToHungarian(src, user, force) {
                 if (!user[hungarianKey]) {
                     user[hungarianKey] = {};
                 }
-                $.extend(true, user[hungarianKey], user[key]);
+                $.extend(true, user[hungarianKey], val);
 
                 _fnCamelToHungarian(src[hungarianKey], user[hungarianKey], force);
             } else {
-                user[hungarianKey] = user[key];
+                user[hungarianKey] = val;
             }
         }
     });
@@ -1841,8 +1846,7 @@ function _fnCamelToHungarian(src, user, force) {
  * Language compatibility - when certain options are given, and others aren't, we
  * need to duplicate the values over, in order to provide backwards compatibility
  * with older language files.
- *  @param {object} oSettings dataTables settings object
- *  @memberof DataTable#oApi
+ *  @param {object} lang dataTables language settings object
  */
 function _fnLanguageCompat(lang) {
     // Note the use of the Hungarian notation for the parameters in this method as
@@ -6869,6 +6873,15 @@ _Api.extend = function (scope, obj, ext) {
 
     for (i = 0, ien = ext.length; i < ien; i++) {
         struct = ext[i];
+
+        // Skip dangerous property names
+        if (
+            struct.name === "__proto__" ||
+            struct.name === "constructor" ||
+            struct.name === "prototype"
+        ) {
+            continue;
+        }
 
         // Value
         obj[struct.name] =
@@ -14294,19 +14307,43 @@ $.extend(DataTable.ext.type.detect, [
 
 $.extend(DataTable.ext.type.search, {
     html: function (data) {
-        return _empty(data)
-            ? data
-            : typeof data === "string"
-              ? data.replace(_re_new_lines, " ").replace(_re_html, "")
-              : "";
+        if (_empty(data)) {
+            return data;
+        }
+
+        if (typeof data !== "string") {
+            return "";
+        }
+
+        // Batasi panjang data untuk mencegah ReDoS
+        if (data.length > 10000) {
+            data = data.substring(0, 10000);
+        }
+
+        // Gunakan DOM parsing untuk menghapus tag HTML (lebih aman daripada regex)
+        var div = document.createElement("div");
+        div.innerHTML = data;
+        var textContent = div.textContent || div.innerText || "";
+
+        // Normalisasi whitespace
+        return textContent.replace(/\s+/g, " ").trim();
     },
 
     string: function (data) {
-        return _empty(data)
-            ? data
-            : typeof data === "string"
-              ? data.replace(_re_new_lines, " ")
-              : data;
+        if (_empty(data)) {
+            return data;
+        }
+
+        if (typeof data !== "string") {
+            return "";
+        }
+
+        // Batasi panjang data sebelum diproses
+        if (data.length > 10000) {
+            data = data.substring(0, 10000);
+        }
+
+        return data.replace(/\s+/g, " ").trim();
     },
 });
 
@@ -14379,6 +14416,11 @@ function _addNumericSort(decimalPlace) {
     );
 }
 
+function stripHtml(html) {
+    let doc = new DOMParser().parseFromString(html, "text/html");
+    return doc.body.textContent || "";
+}
+
 // Default sort methods
 $.extend(_ext.type.order, {
     // Dates
@@ -14387,15 +14429,13 @@ $.extend(_ext.type.order, {
         return isNaN(ts) ? -Infinity : ts;
     },
 
-    // html
+    // html (Perbaikan dilakukan di sini)
     "html-pre": function (a) {
-        return _empty(a) ? "" : a.replace ? a.replace(/<.*?>/g, "").toLowerCase() : a + "";
+        return _empty(a) ? "" : typeof a === "string" ? stripHtml(a).toLowerCase() : a + "";
     },
 
     // string
     "string-pre": function (a) {
-        // This is a little complex, but faster than always calling toString,
-        // https://jsperf.com/tostring-v-check
         return _empty(a)
             ? ""
             : typeof a === "string"
@@ -14405,8 +14445,7 @@ $.extend(_ext.type.order, {
                 : a.toString();
     },
 
-    // string-asc and -desc are retained only for compatibility with the old
-    // sort methods
+    // string-asc and -desc are retained only for
     "string-asc": function (x, y) {
         return x < y ? -1 : x > y ? 1 : 0;
     },

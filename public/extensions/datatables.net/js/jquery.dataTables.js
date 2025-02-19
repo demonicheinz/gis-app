@@ -1890,14 +1890,28 @@
                 // For objects, we need to buzz down into the object to copy parameters
                 if (hungarianKey.charAt(0) === "o") {
                     // Copy the camelCase options over to the hungarian
-                    if (!user[hungarianKey]) {
-                        user[hungarianKey] = {};
+                    if (
+                        hungarianKey !== "__proto__" &&
+                        hungarianKey !== "constructor" &&
+                        hungarianKey !== "prototype"
+                    ) {
+                        if (!user[hungarianKey]) {
+                            user[hungarianKey] = {};
+                        }
+                        $.extend(true, user[hungarianKey], user[key]);
+                        _fnCamelToHungarian(src[hungarianKey], user[hungarianKey], force);
                     }
                     $.extend(true, user[hungarianKey], user[key]);
 
                     _fnCamelToHungarian(src[hungarianKey], user[hungarianKey], force);
                 } else {
-                    user[hungarianKey] = user[key];
+                    if (
+                        hungarianKey !== "__proto__" &&
+                        hungarianKey !== "constructor" &&
+                        hungarianKey !== "prototype"
+                    ) {
+                        user[hungarianKey] = user[key];
+                    }
                 }
             }
         });
@@ -6959,6 +6973,15 @@
 
         for (i = 0, ien = ext.length; i < ien; i++) {
             struct = ext[i];
+
+            // Skip dangerous properties to prevent prototype pollution
+            if (
+                struct.name === "__proto__" ||
+                struct.name === "constructor" ||
+                struct.name === "prototype"
+            ) {
+                continue;
+            }
 
             // Value
             obj[struct.name] =

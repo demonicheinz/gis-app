@@ -1,17 +1,21 @@
 <div align="center">
-  <br>
-      <img src="https://www.upinside.com.br/tim.php?src=uploads/courses/2020/11/laravel-developer-1604669669.png&w=960&h=540" alt="Project Banner">
-  <br>
 
-  <div>
-    <img src="https://img.shields.io/badge/Laravel-FF2D20?style=for-the-badge&logo=laravel&logoColor=white" alt="laravel"/>
-    <img src="https://img.shields.io/badge/Leaflet-199900?style=for-the-badge&logo=Leaflet&logoColor=white" alt="leaflet"/>
-    <img src="https://img.shields.io/badge/MySQL-005C84?style=for-the-badge&logo=mysql&logoColor=white" alt="mysql"/>
-    <img src="https://img.shields.io/badge/Bootstrap-563D7C?style=for-the-badge&logo=bootstrap&logoColor=white" alt="bootstrap"/>
-    <img src="https://img.shields.io/badge/Tailwind_CSS-38B2AC?style=for-the-badge&logo=tailwind-css&logoColor=white" alt="tailwindcss"/>
-  </div>
+<br>
 
-<h3 align="center">Sistem Informasi Geografis</h3>
+![Banner](https://github.com/demonicheinz/gis-app/blob/test/assets/project-banner.png)
+
+<br>
+
+![Laravel](https://img.shields.io/badge/Laravel-%23FF2D20.svg?logo=laravel&logoColor=white)
+![Leaflet](https://img.shields.io/badge/Leaflet-color?style=flat&logo=leaflet&color=%23199900)
+![MySQL](https://img.shields.io/badge/MySQL-color?style=flat&logo=mysql&logoColor=white&color=%234479A1)
+![Bootstrap](https://img.shields.io/badge/Bootstrap-color?style=flat&logo=bootstrap&logoColor=white&color=%237952B3)
+
+![GitHub License](https://img.shields.io/github/license/demonicheinz/gis-app?label=License)
+![GitHub branch check runs](https://img.shields.io/github/check-runs/demonicheinz/gis-app/main?logo=github&label=Checks)
+[![CodeQL](https://github.com/demonicheinz/gis-app/actions/workflows/github-code-scanning/codeql/badge.svg)](https://github.com/demonicheinz/gis-app/actions/workflows/github-code-scanning/codeql)
+[![Live Preview](https://img.shields.io/badge/Live%20Preview-➚-blue)](https://sig.heinz.id/)
+
 </div>
 
 <br>
@@ -39,7 +43,7 @@ Aplikasi ini menampilkan data spasial Kabupaten Banyumas dan memungkinkan penggu
 ## Features
 
 - Peta interaktif menggunakan LeafletJS.
-- CRUD data kecamatan dan sekolah (hanya admin yang dapat mengelola data).
+- CRUD data kecamatan dan sekolah.
 - Tampilan responsif menggunakan Bootstrap 5.
 
 <br>
@@ -56,43 +60,32 @@ Aplikasi ini menampilkan data spasial Kabupaten Banyumas dan memungkinkan penggu
 
 ## Quick Start
 
-**Prerequisites**:\
 Ikuti langkah-langkah di bawah ini untuk menginstal dan menyiapkan semua prasyarat:
 
-**Laragon**\
-Pastikan Laragon sudah terinstal dan berjalan di komputer Anda. PHP Versi 8.2 atau lebih tinggi harus diperlukan untuk Laravel 11.
-
-**Nodejs**\
-Pastikan Node.js sudah terinstal dan berjalan di komputer Anda. Jika Anda sudah menginstal Node di komputer Anda, Anda dapat melewati langkah ini jika versi Node yang Anda miliki lebih dari 18. Kami menyarankan Anda untuk menggunakan versi LTS dari Node.js.
-
-**Composer**\
-Pastikan Composer telah terinstal dan berjalan di komputer Anda. pastikan versi composer adalah 2.2.0 atau lebih tinggi.
-
-**Git**\
-Pastikan Git terinstal secara global dan berjalan di komputer Anda. Jika Anda sudah menginstal git di komputer Anda, Anda dapat melewati langkah ini.
+| **Prasyarat** | **Deskripsi**                                                              | **Versi Minimum** |
+| ------------- | -------------------------------------------------------------------------- | ----------------- |
+| **Laragon**   | Pastikan Laragon sudah terinstal dan berjalan di komputer Anda.            | -                 |
+| **PHP**       | Laravel 11 memerlukan PHP versi 8.2 atau lebih tinggi.                     | 8.2+              |
+| **Node.js**   | Pastikan Node.js terinstal dan berjalan. Disarankan menggunakan versi LTS. | 18+               |
+| **Composer**  | Composer harus sudah terinstal. Pastikan versinya 2.2.0 atau lebih tinggi. | 2.2.0+            |
+| **Git**       | Pastikan Git terinstal secara global dan berjalan.                         | -                 |
 
 Setelah semua prasyarat terpasang, Anda dapat melanjutkan ke langkah-langkah berikut untuk memulai proyek Anda:
 
-1.  **Clone Repositori**:
+1.  **Clone Repositori**
 
     ```bash
     git clone https://github.com/demonicheinz/gis-app.git
     cd gis-app
     ```
 
-2.  **Install Dependensi**:
+2.  **Install Dependencies**
 
     ```bash
-    composer install
+    composer install && npm install
     ```
 
-3.  Install and Build Node.js Dependencies
-
-    ```bash
-    npm install && npm run build
-    ```
-
-4.  Konfigurasi File `.env`
+3.  **Konfigurasi File `.env`**
 
     Salin file `.env.example` menjadi `.env` dan atur konfigurasinya:
 
@@ -100,31 +93,25 @@ Setelah semua prasyarat terpasang, Anda dapat melanjutkan ke langkah-langkah ber
     cp .env.example .env
     ```
 
-5.  **Generate Key Aplikasi**:
+4.  **Generate Key Aplikasi**
 
     ```bash
     php artisan key:generate
     ```
 
-6.  **Jalankan Migrasi**:
+5.  **Jalankan Migrasi dan Seeder**
 
     ```bash
-    php artisan migrate --seed
+    php artisan migrate:fresh --seed
     ```
 
-7.  **Jalankan Aplikasi**:
+6.  **Jalankan Aplikasi**
 
     ```bash
     php artisan serve
     ```
 
-    Untuk menjalankan aplikasi frontend, jalankan:
-
-    ```bash
-    npm run dev
-    ```
-
-8.  **Buka Aplikasi di browser**:
+7.  **Buka Aplikasi di browser**
 
     ```
     http://localhost:8000
@@ -141,9 +128,11 @@ Pastikan file .env telah diisi dengan variabel berikut:
 
 ```env
 APP_NAME="SIG Banyumas"
+
 DB_DATABASE=gis_app
 DB_USERNAME=root
 DB_PASSWORD=
+
 MAIL_MAILER=smtp
 MAIL_HOST=smtp.example.com
 MAIL_PORT=587

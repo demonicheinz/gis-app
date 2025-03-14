@@ -1,54 +1,30 @@
 FROM dunglas/frankenphp:1-php8.2-alpine
 
-# Set working directory
 WORKDIR /app
 
 # Install dependencies
 RUN apk add --no-cache \
-    build-base \
-    libpng-dev \
-    libjpeg-turbo-dev \
-    freetype-dev \
-    zip \
-    jpegoptim \
-    optipng \
-    pngquant \
-    gifsicle \
-    vim \
-    unzip \
-    git \
-    curl \
-    libzip-dev \
-    oniguruma-dev \
-    icu-dev
-
-# Install extensions
-RUN docker-php-ext-install pdo_mysql mbstring zip exif pcntl
-RUN docker-php-ext-configure gd --with-freetype --with-jpeg && docker-php-ext-install gd
-RUN docker-php-ext-configure intl && docker-php-ext-install intl
+    libpng-dev libjpeg-turbo-dev freetype-dev zip \
+    jpegoptim optipng pngquant gifsicle \
+    unzip git curl libzip-dev icu-dev nodejs npm
 
 # Install composer
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
-# Install Node.js and npm
-RUN apk add --no-cache nodejs npm
-
-# Copy composer files first for better caching
+# Copy composer files first
 COPY composer.json composer.lock ./
-RUN composer install --no-scripts --no-autoloader --no-dev
+RUN composer install --no-dev --optimize-autoloader
 
 # Copy package files
 COPY package.json package-lock.json ./
-RUN npm install
+RUN npm ci --omit=dev
 
-# Copy the rest of the application code
+# Copy application files
 COPY . .
 
-# Set proper permissions
-RUN chown -R www-data:www-data /app/storage /app/bootstrap/cache
-
-# Generate optimized autoloader and run other post-install scripts
-RUN composer dump-autoload --optimize && composer run-script post-autoload-dump
+# Set permissions
+RUN chown -R www-data:www-data /app/storage /app/bootstrap/cache \
+    && chmod -R 775 /app/storage /app/bootstrap/cache
 
 # Build frontend assets
 RUN npm run build
@@ -57,8 +33,14 @@ RUN npm run build
 ENV APP_ENV=production
 ENV APP_DEBUG=false
 
-# Expose port 443 for HTTPS
-EXPOSE 80 443
+# Salin .env.example ke .env
+RUN cp .env.example .env
+
+# Generate application key
+RUN php artisan key:generate
+
+# Expose port 80 for HTTP
+EXPOSE 80
 
 # Start FrankenPHP
-CMD ["frankenphp", "run", "--config", "/etc/caddy/Caddyfile"] 
+CMD ["frankenphp", "serve"]

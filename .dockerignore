@@ -15,9 +15,12 @@ bootstrap/cache/*
 .env.*
 !.env.example
 docker-compose.yml
-Dockerfile
 .dockerignore
-docker/
 *.log
 *.md
-tests 
+tests
+.phpunit.cache
+npm-debug.log
+yarn-error.log
+Homestead.json
+Homestead.yaml 

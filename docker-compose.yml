@@ -1,0 +1,59 @@
+version: '3'
+
+services:
+  # FrankenPHP Service
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: gis-app
+    restart: unless-stopped
+    ports:
+      - "80:80"
+    volumes:
+      - ./:/app
+      - ./docker/php/local.ini:/usr/local/etc/php/conf.d/local.ini
+      - ./docker/caddy/Caddyfile:/etc/caddy/Caddyfile
+    networks:
+      - gis-network
+    depends_on:
+      - mysql
+      - redis
+
+  # MySQL Service
+  mysql:
+    image: mysql:8.0
+    container_name: gis-mysql
+    restart: unless-stopped
+    environment:
+      MYSQL_DATABASE: ${DB_DATABASE:-gis_app}
+      MYSQL_ROOT_PASSWORD: ${DB_PASSWORD}
+      MYSQL_PASSWORD: ${DB_PASSWORD}
+      MYSQL_USER: ${DB_USERNAME}
+      SERVICE_TAGS: dev
+      SERVICE_NAME: mysql
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql-data:/var/lib/mysql
+      - ./docker/mysql/my.cnf:/etc/mysql/my.cnf
+    networks:
+      - gis-network
+
+  # Redis Service
+  redis:
+    image: redis:alpine
+    container_name: gis-redis
+    restart: unless-stopped
+    ports:
+      - "6379:6379"
+    networks:
+      - gis-network
+
+networks:
+  gis-network:
+    driver: bridge
+
+volumes:
+  mysql-data:
+    driver: local 

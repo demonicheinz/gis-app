@@ -1,0 +1,77 @@
+{
+  "name": "gis-banyumas",
+  "type": "docker",
+  "buildPack": "dockerfile",
+  "dockerfilePath": "./Dockerfile",
+  "port": 443,
+  "exposePort": true,
+  "volumes": [
+    {
+      "source": "caddy_data",
+      "destination": "/data",
+      "type": "volume"
+    },
+    {
+      "source": "caddy_config",
+      "destination": "/config",
+      "type": "volume"
+    }
+  ],
+  "environmentVariables": [
+    {
+      "name": "APP_NAME",
+      "value": "SIG Banyumas"
+    },
+    {
+      "name": "APP_ENV",
+      "value": "production"
+    },
+    {
+      "name": "APP_DEBUG",
+      "value": "false"
+    },
+    {
+      "name": "APP_URL",
+      "value": "https://gis.heinz.id"
+    },
+    {
+      "name": "DB_CONNECTION",
+      "value": "mysql"
+    },
+    {
+      "name": "DB_HOST",
+      "value": "mysql"
+    },
+    {
+      "name": "DB_PORT",
+      "value": "3306"
+    },
+    {
+      "name": "DB_DATABASE",
+      "value": "gis_app"
+    },
+    {
+      "name": "REDIS_HOST",
+      "value": "redis"
+    }
+  ],
+  "secretEnvironmentVariables": [
+    {
+      "name": "APP_KEY",
+      "value": ""
+    },
+    {
+      "name": "DB_USERNAME",
+      "value": ""
+    },
+    {
+      "name": "DB_PASSWORD",
+      "value": ""
+    }
+  ],
+  "domains": [
+    "gis.heinz.id"
+  ],
+  "healthCheckPath": "/",
+  "healthCheckPort": 80
+} 
